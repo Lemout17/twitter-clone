@@ -1,26 +1,24 @@
 import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { useRouter } from 'next/router'
-
-import useUserInfo from '../hooks/useUserInfo'
-
 import UsernameForm from '../components/UsernameForm'
+import useUserInfo from '../hooks/useUserInfo'
 import PostForm from '../components/PostForm'
+import axios from 'axios'
 import PostContent from '../components/PostContent'
 import Layout from '../components/Layout'
+import { useRouter } from 'next/router'
 
 export default function Home() {
   const { data: session } = useSession()
-  const { userInfo, userInfoStatus, setUserInfo } = useUserInfo()
+  const { userInfo, setUserInfo, status: userInfoStatus } = useUserInfo()
   const [posts, setPosts] = useState([])
   const [idsLikedByMe, setIdsLikedByMe] = useState([])
   const router = useRouter()
 
   function fetchHomePosts() {
-    axios.get('api/posts').then((res) => {
-      setPosts(res.data.posts)
-      setIdsLikedByMe(res.data.idsLikedByMe)
+    axios.get('/api/posts').then((response) => {
+      setPosts(response.data.posts)
+      setIdsLikedByMe(response.data.idsLikedByMe)
     })
   }
 
@@ -30,10 +28,6 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (!userInfo) {
-      return
-    }
-
     fetchHomePosts()
   }, [])
 
@@ -51,16 +45,26 @@ export default function Home() {
     return 'no user info'
   }
 
-  console.log({ userInfo })
-
   return (
     <Layout>
       <h1 className="text-lg font-bold p-4">Home</h1>
-      <PostForm onPost={() => fetchHomePosts()} />
+      <PostForm
+        onPost={() => {
+          fetchHomePosts()
+        }}
+      />
       <div className="">
         {posts.length > 0 &&
           posts.map((post) => (
-            <div key={post._id} className="border-t border-twitterBorder p-5">
+            <div className="border-t border-twitterBorder p-5" key={post._id}>
+              {post.parent && (
+                <div>
+                  <PostContent {...post.parent} />
+                  <div className="relative h-8">
+                    <div className="border-l-2 border-twitterBorder h-10 absolute ml-6 -top-4"></div>
+                  </div>
+                </div>
+              )}
               <PostContent
                 {...post}
                 likedByMe={idsLikedByMe.includes(post._id)}
@@ -71,8 +75,8 @@ export default function Home() {
       {userInfo && (
         <div className="p-5 text-center border-t border-twitterBorder">
           <button
-            className="bg-twitterWhite text-black px-5 py-2 rounded-full"
             onClick={logout}
+            className="bg-twitterWhite text-black px-5 py-2 rounded-full"
           >
             Logout
           </button>
