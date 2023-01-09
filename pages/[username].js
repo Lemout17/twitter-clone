@@ -6,9 +6,12 @@ import Layout from '../components/Layout'
 import TopNavLink from '../components/TopNavLink'
 import Cover from '../components/Cover'
 import Avatar from '../components/Avatar'
+import PostContent from '../components/PostContent'
 
 export default function UserPage() {
   const [profileInfo, setProfileInfo] = useState()
+  const [posts, setPosts] = useState([])
+  const [postsLikedByMe, setPostsLikedByMe] = useState([])
   const router = useRouter()
   const { username } = router.query
 
@@ -21,6 +24,16 @@ export default function UserPage() {
       .get('/api/users?username=' + username)
       .then((res) => setProfileInfo(res.data.user))
   }, [username])
+
+  useEffect(() => {
+    if (!profileInfo?._id) {
+      return
+    }
+    axios.get('/api/posts?author=' + profileInfo._id).then((response) => {
+      setPosts(response.data.posts)
+      setPostsLikedByMe(response.data.idsLikedByMe)
+    })
+  }, [profileInfo])
 
   return (
     <Layout>
@@ -51,6 +64,15 @@ export default function UserPage() {
           </div>
         </div>
       )}
+      {posts?.length > 0 &&
+        posts.map((post) => (
+          <div className="p-5 border-t border-twitterBorder" key={post._id}>
+            <PostContent
+              {...post}
+              likedByMe={postsLikedByMe.includes(post._id)}
+            />
+          </div>
+        ))}
     </Layout>
   )
 }
