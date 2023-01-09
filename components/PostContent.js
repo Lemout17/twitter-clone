@@ -11,6 +11,7 @@ export default function PostContent({
   likesCount,
   big = false,
   likedByMe,
+  commentsCount,
 }) {
   return (
     <div>
@@ -32,11 +33,14 @@ export default function PostContent({
           </div>
           {!big && (
             <div>
-              <Link href={`/${author.username}/status/${_id}`}>{text}</Link>
+              <Link href={`/${author.username}/status/${_id}`}>
+                <div className="w-full cursor-pointer">{text}</div>
+              </Link>
               <PostButtons
                 id={_id}
                 likesCount={likesCount}
                 likedByMe={likedByMe}
+                commentsCount={commentsCount}
               />
             </div>
           )}
@@ -56,7 +60,12 @@ export default function PostContent({
                 .join(' ')}
             </div>
           )}
-          <PostButtons id={_id} likesCount={likesCount} likedByMe={likedByMe} />
+          <PostButtons
+            id={_id}
+            likesCount={likesCount}
+            likedByMe={likedByMe}
+            commentsCount={commentsCount}
+          />
         </div>
       )}
     </div>
