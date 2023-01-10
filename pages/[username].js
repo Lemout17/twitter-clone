@@ -35,6 +35,10 @@ export default function UserPage() {
     })
   }, [profileInfo])
 
+  function updateUserImage(type, src) {
+    setProfileInfo((prev) => ({ ...prev, [type]: src }))
+  }
+
   return (
     <Layout>
       {!!profileInfo && (
@@ -42,11 +46,20 @@ export default function UserPage() {
           <div className="px-5 py-2">
             <TopNavLink title={username} />
           </div>
-          <Cover />
+          <Cover
+            src={profileInfo.cover}
+            onChange={(src) => updateUserImage('cover', src)}
+            editable={true}
+          />
           <div className="flex justify-between">
             <div className="ml-5 relative">
-              <div className="absolute -top-12 border-4 rounded-full border-black">
-                <Avatar big src={profileInfo.image} />
+              <div className="absolute -top-12 border-4 rounded-full border-black overflow-hidden">
+                <Avatar
+                  big
+                  src={profileInfo.image}
+                  editable={true}
+                  onChange={(src) => updateUserImage('image', src)}
+                />
               </div>
             </div>
             <div className="p-2">

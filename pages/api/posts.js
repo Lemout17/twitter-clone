@@ -3,6 +3,7 @@ import Post from '../../models/Post'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
 import Like from '../../models/Like'
+// import Follower from '../../models/Follower'
 
 export default async function handler(req, res) {
   await initMongoose()
