@@ -29,13 +29,13 @@ export default function PostContent({
           <div>
             <Link href={'/' + author?.username}>
               <span className="font-bold pr-1 cursor-pointer">
-                {author.name}
+                {author?.name}
               </span>
             </Link>
             {big && <br />}
             <Link href={'/' + author?.username}>
               <span className=" text-twitterLightGray cursor-pointer">
-                @{author.username}
+                @{author?.username}
               </span>
             </Link>
 
@@ -50,7 +50,7 @@ export default function PostContent({
           </div>
           {!big && (
             <div>
-              <Link href={`/${author.username}/status/${_id}`}>
+              <Link href={`/${author?.username}/status/${_id}`}>
                 <div className="w-full cursor-pointer">{text}</div>
               </Link>
               <PostButtons
@@ -66,7 +66,7 @@ export default function PostContent({
       </div>
       {big && (
         <div className="mt-2">
-          <Link href={`/${author.username}/status/${_id}`}>{text}</Link>
+          <Link href={`/${author?.username}/status/${_id}`}>{text}</Link>
           {createdAt && (
             <div className="text-sm text-twitterLightGray">
               {new Date(createdAt)
