@@ -12,7 +12,24 @@ export default function PostContent({
   big = false,
   likedByMe,
   commentsCount,
+  images,
 }) {
+  function showImages() {
+    if (!images?.length) {
+      return ''
+    }
+    return (
+      <div className="flex -mx-1">
+        {images.length > 0 &&
+          images.map((img) => (
+            <div className="m-1" key={img}>
+              <img src={img} alt="" />
+            </div>
+          ))}
+      </div>
+    )
+  }
+
   return (
     <div>
       <div className="flex w-full">
@@ -51,7 +68,10 @@ export default function PostContent({
           {!big && (
             <div>
               <Link href={`/${author?.username}/status/${_id}`}>
-                <div className="w-full cursor-pointer">{text}</div>
+                <div className="w-full cursor-pointer">
+                  {text}
+                  {showImages()}
+                </div>
               </Link>
               <PostButtons
                 id={_id}
@@ -66,7 +86,12 @@ export default function PostContent({
       </div>
       {big && (
         <div className="mt-2">
-          <Link href={`/${author?.username}/status/${_id}`}>{text}</Link>
+          <Link href={`/${author?.username}/status/${_id}`}>
+            <div>
+              {text}
+              {showImages()}
+            </div>
+          </Link>
           {createdAt && (
             <div className="text-sm text-twitterLightGray">
               {new Date(createdAt)

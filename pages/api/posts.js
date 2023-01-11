@@ -11,7 +11,6 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     const { id } = req.query
-
     if (id) {
       const post = await Post.findById(id).populate('author').populate({
         path: 'parent',
@@ -22,24 +21,19 @@ export default async function handler(req, res) {
       const parent = req.query.parent || null
       const author = req.query.author
       let searchFilter
-
       if (!author && !parent) {
         const myFollows = await Follower.find({
           source: session.user.id,
         }).exec()
         const idsOfPeopleIFollow = myFollows.map((f) => f.destination)
-
         searchFilter = { author: [...idsOfPeopleIFollow, session.user.id] }
       }
-
       if (author) {
         searchFilter = { author }
       }
-
       if (parent) {
         searchFilter = { parent }
       }
-
       const posts = await Post.find(searchFilter)
         .populate('author')
         .populate({
@@ -66,19 +60,18 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const { text, parent } = req.body
+    const { text, parent, images } = req.body
     const post = await Post.create({
       author: session.user.id,
       text,
       parent,
+      images,
     })
-
     if (parent) {
       const parentPost = await Post.findById(parent)
       parentPost.commentsCount = await Post.countDocuments({ parent })
       await parentPost.save()
     }
-
     res.json(post)
   }
 }
