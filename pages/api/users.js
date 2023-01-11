@@ -2,6 +2,7 @@ import { initMongoose } from '../../lib/mongoose'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
 import User from '../../models/User'
+import Follower from '../../models/Follower'
 
 export default async function handle(req, res) {
   await initMongoose()
@@ -17,6 +18,11 @@ export default async function handle(req, res) {
     const { id, username } = req.query
     const user = id ? await User.findById(id) : await User.findOne({ username })
 
-    res.json({ user })
+    const follow = await Follower.findOne({
+      source: session.user.id,
+      destination: user._id,
+    })
+
+    res.json({ user, follow })
   }
 }
