@@ -19,7 +19,7 @@ export default async function handle(req, res) {
     const user = id ? await User.findById(id) : await User.findOne({ username })
 
     const follow = await Follower.findOne({
-      source: session.user.id,
+      source: session?.user.id,
       destination: user._id,
     })
 
