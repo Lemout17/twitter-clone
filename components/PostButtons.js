@@ -1,18 +1,17 @@
+import { useState } from 'react'
 import axios from 'axios'
 import FlipNumbers from 'react-flip-numbers'
-import { useState } from 'react'
 import Link from 'next/link'
 
 export default function PostButtons({
   username,
   id,
   likesCount: likesCountDefault = 0,
-  likedByMe: likeByMeDefault = false,
+  likedByMe: likedByMeDefault = false,
   commentsCount,
 }) {
   const [likesCount, setLikesCount] = useState(likesCountDefault)
-  const [likedByMe, setLikedByMe] = useState(likeByMeDefault)
-
+  const [likedByMe, setLikedByMe] = useState(likedByMeDefault)
   async function toggleLike() {
     const response = await axios.post('/api/like', { id })
     if (response.data?.like) {
@@ -23,7 +22,6 @@ export default function PostButtons({
       setLikedByMe(false)
     }
   }
-
   return (
     <div className="flex justify-between mr-12 text-twitterLightGray text-sm mt-1">
       <Link href={`/${username}/status/${id}`}>
@@ -45,7 +43,6 @@ export default function PostButtons({
           <span>{commentsCount}</span>
         </div>
       </Link>
-
       <button className="flex">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +55,7 @@ export default function PostButtons({
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+            d="M4.5 12c0-1.232.046-2.453.138-3.662a4.006 4.006 0 013.7-3.7 48.678 48.678 0 017.324 0 4.006 4.006 0 013.7 3.7c.017.22.032.441.046.662M4.5 12l-3-3m3 3l3-3m12 3c0 1.232-.046 2.453-.138 3.662a4.006 4.006 0 01-3.7 3.7 48.657 48.657 0 01-7.324 0 4.006 4.006 0 01-3.7-3.7c-.017-.22-.032-.441-.046-.662M19.5 12l-3 3m3-3l3 3"
           />
         </svg>
         <span>0</span>
